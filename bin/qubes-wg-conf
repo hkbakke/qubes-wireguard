@@ -6,8 +6,6 @@ set -e -u
 
 . ./config
 
-exit 1
-
 # /etc/wireguard is symlinked to this location in the template
 [[ -d /rw/config/wireguard ]] || mkdir -m 700 /rw/config/wireguard
 

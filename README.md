@@ -6,4 +6,4 @@
 - Edit the configuration file
 - Run the configuration script
 
-        ./bin/qubes-wg-conf.sh
+        ./bin/qubes-wg-conf
