@@ -33,4 +33,4 @@ Then stop the template VM.
 * Edit the configuration file
 * Run the configuration script
 
-        ./bin/qubes-wg-conf
+        sudo ./bin/qubes-wg-conf
