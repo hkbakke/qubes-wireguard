@@ -1,6 +1,6 @@
 # Description
-Wireguard configuration script for Fedora 33 template in Qubes OS. After setup
-you will have the following:
+Wireguard configuration script for Fedora 33 template in Qubes OS running at
+least kernel 5.4 in dom0. After setup you will have the following:
 
 * A reusable wireguard template
 * A wireguard VPN managed by wg-quick that starts automatically at boot
@@ -18,16 +18,6 @@ tools for easier trobuleshooting.
     sudo ln -s /rw/config/wireguard /etc/wireguard
 
 Then stop the template VM.
-
-After the template is shut down, you have to change the kernel from the default
-dom0 kernel to the one in the VM as the wireguard modules is only included in
-kernel 5.8 and newer.
-
-* Open the wireguard template settings -> Advanced
-* Change `Kernel` to `(none)`
-* Change `Virtualization` to `HVM`
-
-This template is now ready to be used.
 
 # VPN Qube
 * Create a new qube based on the wireguard template
