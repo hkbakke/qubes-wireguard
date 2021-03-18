@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# This script can safely be ran multiple times.
+# This script can safely be executed multiple times.
 #
 set -e -u
 
