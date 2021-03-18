@@ -11,7 +11,7 @@ least kernel 5.4 in dom0. After setup you will have the following:
 # Reusable wireguard template
 First clone the fedora 33 template to e.g. `fedora-33-wireguard`. Then install
 the wireguard tools in this template. I also like to include a couple of extra
-tools for easier trobuleshooting.
+tools for easier troubleshooting.
 
     sudo dnf install -y wireguard-tools tcpdump bind-utils bash-completion
     sudo rm -r /etc/wireguard
