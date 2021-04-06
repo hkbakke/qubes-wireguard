@@ -14,8 +14,8 @@ the wireguard tools in this template. I also like to include a couple of extra
 tools for easier troubleshooting.
 
     sudo dnf install -y wireguard-tools tcpdump bind-utils bash-completion
-    sudo rm -r /etc/wireguard
-    sudo ln -s /rw/config/wireguard /etc/wireguard
+    sudo mkdir /rw/config/wireguard
+    sudo ln -s /rw/config/wireguard/wg0.conf /etc/wireguard/wg0.conf
 
 Then stop the template VM.
 
