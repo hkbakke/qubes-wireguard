@@ -26,9 +26,10 @@ Then stop the template VM.
 
 ## Configuration
 * Clone this repo
-* Copy `config.example` to `config`
+* Copy `config.example` to `config` and change permissions to protect it
 
         cp config.example config
+        chmod 600 config
 
 * Edit the configuration file
 * Run the configuration script
