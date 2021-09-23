@@ -35,3 +35,5 @@ Then stop the template VM.
 * Run the configuration script
 
         sudo ./bin/qubes-wg-conf
+        
+* Reboot the VPN qube to activate the changes
