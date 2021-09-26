@@ -4,7 +4,7 @@ least kernel 5.4 in dom0. After setup you will have the following:
 
 * A reusable wireguard template
 * A wireguard VPN managed by wg-quick that starts automatically at boot
-* Properly configured firewall that only forwards traffic to the VPN
+* Properly configured firewall that only forwards client traffic to the VPN. If the tunnel is down the client traffic is dropped.
 * TCP MSS clamping to avoid MTU issues when used as a network provider
 * Wireguard DNS handled via Qubes' DNS DNAT rules
 
