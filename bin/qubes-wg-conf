@@ -6,7 +6,7 @@ set -e -u
 
 . ./config
 
-# /etc/wireguard is symlinked to this location in the template
+# /etc/wireguard/wg0.conf is symlinked to this folder in the template
 mkdir -p -m 700 /rw/config/wireguard
 
 # Protect the key in the config file
