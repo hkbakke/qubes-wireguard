@@ -1,6 +1,7 @@
 # Description
-Wireguard configuration script for Fedora 34 template in Qubes OS running at
-least kernel 5.4 in dom0. After setup you will have the following:
+Wireguard configuration script for Fedora 34 template in Qubes OS
+
+After setup you will have the following:
 
 * A reusable wireguard template
 * A wireguard VPN managed by wg-quick that starts automatically at boot
@@ -11,15 +12,12 @@ least kernel 5.4 in dom0. After setup you will have the following:
 * Wireguard DNS handled via Qubes' DNS DNAT rules
 
 # Reusable wireguard template
-First clone the fedora 34 template to e.g. `fedora-34-wireguard`. Then install
-the wireguard tools in this template. I also like to include a couple of extra
-tools for easier troubleshooting.
+First clone the fedora 34 template to e.g. `fedora-34-wireguard`. Then run the
+template configuration script.
 
-    sudo dnf install -y wireguard-tools tcpdump bind-utils bash-completion
-    sudo mkdir /rw/config/wireguard
-    sudo ln -s /rw/config/wireguard/wg0.conf /etc/wireguard/wg0.conf
+    sudo ./bin/wg-template-conf
 
-Then stop the template VM.
+Stop the template VM before continuing.
 
 # VPN Qube
 * Create a new qube based on the wireguard template
@@ -36,6 +34,6 @@ Then stop the template VM.
 * Edit the configuration file
 * Run the configuration script
 
-        sudo ./bin/qubes-wg-conf
-        
+        sudo ./bin/wg-appvm-conf
+
 * Reboot the VPN qube to activate the changes

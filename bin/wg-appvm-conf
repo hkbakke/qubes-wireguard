@@ -4,14 +4,21 @@
 #
 set -e -u
 
+
+WG_DIR="/rw/config/wireguard"
+WG_CONF="wg0.conf"
+RC_LOCAL="/rw/config/rc.local"
+START_CMD="systemctl start wg-quick@wg0"
+
+
 . ./config
 
 # /etc/wireguard/wg0.conf is symlinked to this folder in the template
-mkdir -p -m 700 /rw/config/wireguard
+mkdir -p -m 700 "$WG_DIR"
 
 # Protect the key in the config file
-touch /rw/config/wireguard/wg0.conf
-chmod 600 /rw/config/wireguard/wg0.conf
+touch "$WG_DIR/$WG_CONF"
+chmod 600 "$WG_DIR/$WG_CONF"
 
 cat << EOF > /rw/config/wireguard/wg0.conf
 [Interface]
@@ -30,18 +37,5 @@ Endpoint = $WG_ENDPOINT
 EOF
 
 # Start the wireguard connection at boot
-grep -F "systemctl start wg-quick@wg0" /rw/config/rc.local > /dev/null || echo "systemctl start wg-quick@wg0" >> /rw/config/rc.local
-
-# Ensure only traffic destined for the wireguard interface is forwarded
-mkdir -p /rw/config/qubes-firewall.d
-
-cat << EOF > /rw/config/qubes-firewall.d/wireguard
-#!/bin/sh
-
-iptables -F QBS-FORWARD
-iptables -A QBS-FORWARD -o wg+ -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
-iptables -A QBS-FORWARD -i vif+ -o wg+ -j ACCEPT
-iptables -A QBS-FORWARD -j DROP
-EOF
-
-chmod +x /rw/config/qubes-firewall.d/wireguard
+grep -F "$START_CMD" "$RC_LOCAL" > /dev/null \
+    || echo "$START_CMD" >> "$RC_LOCAL"
