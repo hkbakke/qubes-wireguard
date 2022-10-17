@@ -1,5 +1,5 @@
 # Description
-Wireguard configuration script for Fedora 34 template in Qubes OS
+Wireguard configuration script for Fedora 36 template in Qubes OS
 
 After setup you will have the following:
 
@@ -12,7 +12,7 @@ After setup you will have the following:
 * Wireguard DNS handled via Qubes' DNS DNAT rules
 
 # Reusable wireguard template
-First clone the fedora 34 template to e.g. `fedora-34-wireguard`. Then run the
+First clone the fedora 36 template to e.g. `fedora-36-wireguard`. Then run the
 template configuration script.
 
     sudo ./bin/wg-template-conf
