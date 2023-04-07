@@ -32,6 +32,7 @@ PostDown = /usr/lib/qubes/qubes-setup-dnat-to-ns
 
 [Peer]
 PublicKey = $WG_PEER_PUBLIC_KEY
+PresharedKey = $WG_PEER_PRESHARED_KEY
 AllowedIPs = 0.0.0.0/0
 Endpoint = $WG_ENDPOINT
 EOF
