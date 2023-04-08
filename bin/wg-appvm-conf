@@ -11,7 +11,7 @@ WG_CONF="$WG_DIR/$WG_CONF_NAME.conf"
 RC_LOCAL="/rw/config/rc.local"
 START_CMD="systemctl start wg-quick@$WG_CONF_NAME"
 
-# ensure optional variables are defined
+# Ensure optional variables are defined
 WG_PRESHARED_KEY=
 WG_PERSISTENT_KEEPALIVE=
 
