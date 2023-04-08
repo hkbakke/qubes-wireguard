@@ -4,16 +4,16 @@
 #
 set -e -u
 
-
+WG_CONF_NAME="wg0"
 WG_DIR="/rw/config/wireguard"
-WG_CONF="wg0.conf"
+WG_CONF="$WG_DIR/$WG_CONF_NAME.conf"
 FW_DIR="/etc/qubes/qubes-firewall.d"
 FW_FILE="wireguard"
 
 
 dnf install -y wireguard-tools
 mkdir -p "$WG_DIR"
-ln -sf "$WG_DIR/$WG_CONF" "/etc/wireguard/$WG_CONF"
+ln -sf "$WG_CONF" "/etc/wireguard/$WG_CONF_NAME.conf"
 
 
 # Ensure only traffic destined for the wireguard interface is forwarded

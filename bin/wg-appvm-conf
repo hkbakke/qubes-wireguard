@@ -5,27 +5,28 @@
 set -e -u
 
 
+WG_CONF_NAME="wg0"
 WG_DIR="/rw/config/wireguard"
-WG_CONF="wg0.conf"
+WG_CONF="$WG_DIR/$WG_CONF_NAME.conf"
 RC_LOCAL="/rw/config/rc.local"
-START_CMD="systemctl start wg-quick@wg0"
+START_CMD="systemctl start wg-quick@$WG_CONF_NAME"
 
 
 . ./config
 
-# /etc/wireguard/wg0.conf is symlinked to this folder in the template
+# $WG_CONF is symlinked to this folder in the template
 mkdir -p -m 700 "$WG_DIR"
 
 # Protect the key in the config file
-touch "$WG_DIR/$WG_CONF"
-chmod 600 "$WG_DIR/$WG_CONF"
+touch "$WG_CONF"
+chmod 600 "$WG_CONF"
 
-cat << EOF > /rw/config/wireguard/wg0.conf
+cat << EOF > "$WG_CONF"
 [Interface]
 Address = $WG_ADDRESS
 DNS = $WG_DNS
 PrivateKey = $WG_PRIVATE_KEY
-PostUp = for ns in \$(resolvectl dns wg0 | sed 's/.*: //'); do echo "nameserver \$ns"; done > /etc/resolv.conf
+PostUp = for ns in \$(resolvectl dns $WG_CONF_NAME | sed 's/.*: //'); do echo "nameserver \$ns"; done > /etc/resolv.conf
 PostUp = /usr/lib/qubes/qubes-setup-dnat-to-ns
 PostDown = for ns in \$(resolvectl dns | grep -F 'Link 2 (eth0)' | sed 's/.*: //'); do echo "nameserver \$ns"; done > /etc/resolv.conf
 PostDown = /usr/lib/qubes/qubes-setup-dnat-to-ns
@@ -35,6 +36,9 @@ PublicKey = $WG_PEER_PUBLIC_KEY
 AllowedIPs = 0.0.0.0/0
 Endpoint = $WG_ENDPOINT
 EOF
+
+[[ -n $WG_PRESHARED_KEY ]] && echo "PresharedKey = $WG_PRESHARED_KEY" >> "$WG_CONF"
+[[ -n $WG_PERSISTENT_KEEPALIVE ]] && echo "PersistentKeepalive = $WG_PERSISTENT_KEEPALIVE" >> "$WG_CONF"
 
 # Start the wireguard connection at boot
 grep -F "$START_CMD" "$RC_LOCAL" > /dev/null \
