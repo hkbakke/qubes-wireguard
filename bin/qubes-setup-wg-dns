@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+
+import os
+from ipaddress import IPv4Address
+
+import dbus
+import qubesdb
+
+
+def get_dns_resolved() -> list[IPv4Address]:
+    """
+    Get all DNS servers via dbus
+    """
+    bus = dbus.SystemBus()
+    resolve1 = bus.get_object("org.freedesktop.resolve1", "/org/freedesktop/resolve1")
+    dns = resolve1.Get(
+        "org.freedesktop.resolve1.Manager",
+        "DNS",
+        dbus_interface="org.freedesktop.DBus.Properties",
+    )
+    return [IPv4Address(bytes(addr)) for _, family, addr in dns if family == 2]
+
+
+def install_firewall_rules(dns: list[IPv4Address]) -> None:
+    """
+    Configures nftables dnat rules with any non-default DNS servers
+    """
+    qdb = qubesdb.QubesDB()
+    qubesdb_dns = []
+
+    for i in ("/qubes-netvm-primary-dns", "/qubes-netvm-secondary-dns"):
+        ns_maybe = qdb.read(i)
+        if ns_maybe is None:
+            continue
+        try:
+            qubesdb_dns.append(IPv4Address(ns_maybe.decode("ascii", "strict")))
+        except (UnicodeDecodeError, ValueError):
+            pass
+
+    res = [
+        "add table ip qubes",
+        # Add the chain so that the subsequent delete will work. If the chain already
+        # exists this is a harmless no-op.
+        "add chain ip qubes dnat-dns",
+        # Delete the chain so that if the chain already exists, it will be removed.
+        # The removal of the old chain and addition of the new one happen as a single
+        # atomic operation, so there is no period where neither chain is present or
+        # where both are present.
+        "delete chain ip qubes dnat-dns",
+        "table ip qubes {",
+        "chain dnat-dns {",
+        "type nat hook prerouting priority dstnat; policy accept;",
+    ]
+
+    extra_dns = [i for i in dns if i not in qubesdb_dns]
+
+    for vm_nameserver in qubesdb_dns:
+        for dest_nameserver in extra_dns:
+            res += [
+                f"ip daddr {vm_nameserver} udp dport 53 dnat to {dest_nameserver}",
+                f"ip daddr {vm_nameserver} tcp dport 53 dnat to {dest_nameserver}",
+            ]
+
+    res += ["}\n}\n"]
+    os.execvp("nft", ("nft", "--", "\n".join(res)))
+
+
+if __name__ == "__main__":
+    install_firewall_rules(get_dns_resolved())

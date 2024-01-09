@@ -29,9 +29,7 @@ cat << EOF > "$WG_CONF"
 Address = $WG_ADDRESS
 DNS = $WG_DNS
 PrivateKey = $WG_PRIVATE_KEY
-PostUp = for ns in \$(resolvectl dns $WG_CONF_NAME | sed 's/.*: //'); do echo "nameserver \$ns"; done > /etc/resolv.conf
-PostUp = /usr/lib/qubes/qubes-setup-dnat-to-ns
-PostDown = for ns in \$(resolvectl dns | grep -F 'Link 2 (eth0)' | sed 's/.*: //'); do echo "nameserver \$ns"; done > /etc/resolv.conf
+PostUp = /opt/qubes-wireguard/qubes-setup-wg-dns
 PostDown = /usr/lib/qubes/qubes-setup-dnat-to-ns
 
 [Peer]

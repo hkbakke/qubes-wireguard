@@ -1,5 +1,6 @@
 # Description
-Wireguard configuration script for Fedora 38 template in Qubes OS
+Wireguard configuration script for Fedora 38 template in Qubes OS 4.2 and
+later. For Qubes OS 4.1 use qubes-wireguard version 1.
 
 After setup you will have the following:
 
@@ -12,8 +13,17 @@ After setup you will have the following:
 * Wireguard DNS handled via Qubes' DNS DNAT rules
 
 # Reusable wireguard template
-First clone the fedora 38 template to e.g. `fedora-38-wireguard`. Then run the
-template configuration script.
+First create a template based on the fedora 38 template. Name the template
+`fedora-38-wireguard` or some other useful name. Ensure the template has
+internet access unless you have some other way to get the repository code to
+the template (e.g. download via another AppVM).
+
+    mkdir -p ~/src
+    cd ~/src
+    git clone https://github.com/hkbakke/qubes-wireguard.git
+    cd qubes-wireguard
+
+Then run the template configuration script.
 
     sudo ./bin/wg-template-conf
 
@@ -25,8 +35,7 @@ Stop the template VM before continuing.
 * You probably also want to enable `Start qube automatically on boot`
 
 ## Configuration
-* Clone this repo
-* Copy `config.example` to `config` and change permissions to protect it
+* Create a file named `config` and change permissions to protect it. See `config.example` for syntax.
 
         cp config.example config
         chmod 600 config
@@ -34,6 +43,6 @@ Stop the template VM before continuing.
 * Edit the configuration file
 * Run the configuration script
 
-        sudo ./bin/wg-appvm-conf
+        sudo /opt/qubes-wireguard/wg-appvm-conf
 
 * Reboot the VPN qube to activate the changes
