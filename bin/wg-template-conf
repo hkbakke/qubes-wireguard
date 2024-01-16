@@ -4,33 +4,14 @@
 #
 set -e -u
 
-WG_CONF_NAME="wg0"
-WG_DIR="/rw/config/wireguard"
-WG_CONF="$WG_DIR/$WG_CONF_NAME.conf"
 FW_DIR="/etc/qubes/qubes-firewall.d"
 FW_FILE="wireguard"
-INSTALL_DIR="/opt/qubes-wireguard"
-DNS_CONFIG_SCRIPT="$INSTALL_DIR/qubes-setup-wg-dns"
-APPVM_CONFIG_SCRIPT="$INSTALL_DIR/wg-appvm-conf"
 
 
 # Install wireguard in template
 dnf install -y wireguard-tools
-mkdir -p "$WG_DIR"
-ln -sf "$WG_CONF" "/etc/wireguard/$WG_CONF_NAME.conf"
 
 # Add wireguard firewall config script to template
 mkdir -p "$FW_DIR"
 cp -v "./bin/firewall" "$FW_DIR/$FW_FILE"
 chmod +x "$FW_DIR/$FW_FILE"
-
-# Add wireguard DNS config script to template
-mkdir -p "$INSTALL_DIR"
-cp -v "./bin/qubes-setup-wg-dns" "$DNS_CONFIG_SCRIPT"
-chown root:root "$DNS_CONFIG_SCRIPT"
-chmod 755 "$DNS_CONFIG_SCRIPT"
-
-# Add AppVM config script to template
-cp -v "./bin/wg-appvm-conf" "$APPVM_CONFIG_SCRIPT"
-chown root:root "$APPVM_CONFIG_SCRIPT"
-chmod 755 "$APPVM_CONFIG_SCRIPT"

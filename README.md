@@ -1,16 +1,22 @@
 # Description
-Wireguard configuration script for Fedora 38 template in Qubes OS 4.2 and
-later. For Qubes OS 4.1 use qubes-wireguard version 1.
-
 After setup you will have the following:
 
 * A reusable wireguard template
-* A wireguard VPN managed by wg-quick that starts automatically at boot
+* A wireguard VPN managed by network manager that starts automatically at boot
+* A network GUI indicator
 * Properly configured firewall that only forwards app VM traffic connected to the VPN qube network to the VPN. If the VPN is down, the app VM traffic to WAN is dropped.
-    * Only the app VMs connected to the VPN qube network are protected
-    * The VPN qube's own output traffic is not protected if the VPN is down. So _don't_ use the VPN qube for applications. This is by design as it has to speak directly to the WAN to establish the tunnel. By using a dedicated VPN qube and the Qubes OS network design properly we can work around this for our client apps without having complicated and hard to verify rulesets in place to contain locally generated traffic, and the more challenging DNS requests, as one would need to have if the VPN client runs on the same host as the application that needs protection. Also I don't personally like the concept of the VPN client host to be responsible (and hence trusted) for its own protection to avoid leaks, so I would avoid it and use the dedicated VPN gateway approach in all cases if possible. In qubes we have the luxury option to put another network gateway in front of the VPN gateway that may enforce the leak-protection policy externally without implicitly trusting the VPN client host if you for some reason want to use the VPN qube for sensitive applications.
+    * App VMs connected to the VPN qube network are protected
+    * The VPN qube's own output traffic is not protected if the VPN is down (intentional)
 * TCP MSS clamping to avoid MTU issues when used as a network provider
-* Wireguard DNS handled via Qubes' DNS DNAT rules
+
+# Compatibility
+
+| Version | Qubes OS | Template | Comment |
+|:-:|:-:|---|---|
+| 1 | 4.1 | Fedora 38 |  |
+| 2 | 4.2 | Fedora 38 | No SELinux support |
+| >=3 | >=4.2 | Fedora 38 | Network Manager based with SELinux support |
+
 
 # Reusable wireguard template
 First create a template based on the fedora 38 template. Name the template
@@ -29,20 +35,19 @@ Then run the template configuration script.
 
 Stop the template VM before continuing.
 
-# VPN Qube
+# AppVM VPN Qube
 * Create a new qube based on the wireguard template
+* Add `network-manager` to Services
 * Ensure `Provides network` is enabled
-* You probably also want to enable `Start qube automatically on boot`
+* You may want to enable `Start qube automatically on boot`
 
 ## Configuration
-* Create a file named `config` and change permissions to protect it. See `config.example` for syntax.
+* Create a wireguard config file named `wg0.conf` and change permissions to protect it. See `wg0.conf.example` for syntax.
 
-        cp config.example config
-        chmod 600 config
+        chmod 600 wg0.conf
 
-* Edit the configuration file
-* Run the configuration script
+* Add the configuration file to network-manager
 
-        sudo /opt/qubes-wireguard/wg-appvm-conf
+        nmcli con import type wireguard file wg0.conf
 
-* Reboot the VPN qube to activate the changes
+* You should now see a new network indicator icon in Qubes where you can toggle the wireguard tunnel
