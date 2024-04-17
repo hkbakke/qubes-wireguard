@@ -15,7 +15,7 @@ After setup you will have the following:
 |:-:|:-:|---|---|
 | 1 | 4.1 | Fedora 38 |  |
 | 2 | 4.2 | Fedora 38 | No SELinux support |
-| >=3 | >=4.2 | Fedora 38 | Network Manager based with SELinux support |
+| >=3 | >=4.2 | Fedora >=38 | Network Manager based with SELinux support |
 
 
 # Reusable wireguard template
