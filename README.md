@@ -19,8 +19,8 @@ After setup you will have the following:
 
 
 # Reusable wireguard template
-First create a template based on the fedora 38 template. Name the template
-`fedora-38-wireguard` or some other useful name. Ensure the template has
+First create a template based on the fedora 42 xfce template. Name the template
+`fedora-42-xfce-wg` or some other useful name. Ensure the template has
 internet access unless you have some other way to get the repository code to
 the template (e.g. download via another AppVM).
 
